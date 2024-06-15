@@ -80,10 +80,9 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        .start-button{
+        .start-button {
             margin-top: 25px;
         }
-
 
         .start-button:hover,
         .check-button:hover,
@@ -488,6 +487,8 @@
                 questionMarkButton.textContent = '?';
                 questionMarkButton.disabled = true;
                 questionMarkButton.classList.remove('enabled');
+                checkButton.disabled = false; // Enable the check button for the next question
+                userInput.addEventListener('keypress', handleKeyPress); // Re-enable keypress event listener
                 hasUsedHint = false;
                 lifeDeducted = false;
                 updateProgressBar();
@@ -508,6 +509,8 @@
                     feedback.style.display = 'block';
                     body.classList.add('correct-background');
                     currentSentenceIndex++;
+                    checkButton.disabled = true; // Disable the check button when the answer is correct
+                    userInput.removeEventListener('keypress', handleKeyPress); // Disable keypress event listener when the answer is correct
                     setTimeout(updateSentence, 1000); // Wait for a moment before moving to the next sentence
                 } else {
                     feedback.textContent = 'Incorrect. Try again.';
@@ -532,14 +535,16 @@
             }
         }
 
-        checkButton.addEventListener('click', checkAnswer);
-
-        userInput.addEventListener('keypress', function (event) {
+        function handleKeyPress(event) {
             if (event.key === 'Enter') {
                 event.preventDefault(); // Prevent form submission
                 checkAnswer();
             }
-        });
+        }
+
+        checkButton.addEventListener('click', checkAnswer);
+
+        userInput.addEventListener('keypress', handleKeyPress);
 
         questionMarkButton.addEventListener('click', function () {
             if (!questionMarkButton.disabled) {
