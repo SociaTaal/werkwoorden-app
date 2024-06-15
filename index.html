@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Werkwoorden Practice</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Raleway:wght@400&display=swap">
+    <style>
+        body {
+            font-family: 'Raleway', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            transition: background-color 0.3s;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 500px;
+            max-width: 100%;
+            padding-bottom: 40px;
+            position: relative;
+        }
+
+        .header {
+            background-color: #ffa500;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-size: 1.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .content {
+            padding: 1rem;
+        }
+
+        .content h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .option {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .option input {
+            margin-right: 0.5rem;
+        }
+
+        .start-button,
+        .check-button,
+        .question-mark-button,
+        .next-button,
+        .try-again-button {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #ffa500;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .start-button{
+            margin-top: 25px;
+        }
+
+        .start-button:hover,
+        .check-button:hover,
+        .question-mark-button:hover,
+        .next-button:hover,
+        .try-again-button:hover {
+            background-color: #e69500;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .infinitive-verb,
+        .verb-tense {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #89c796;
+            /* Light green background */
+            color: #333;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .sentence-display {
+            background-color: #ffe4b5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        #user-input {
+            display: block;
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        .translation-info {
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            background-color: #89c796;
+            /* Light green background */
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .feedback {
+            font-size: 1rem;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .hearts {
+            margin: 10px 0;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .question-mark-button,
+        .next-button {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #ffa500;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: not-allowed;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .question-mark-button.enabled,
+        .next-button.enabled {
+            cursor: pointer;
+            background-color: #e69500;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background-color: green;
+            width: 0;
+            transition: width 0.3s;
+        }
+
+        .mistake-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .mistake-list li {
+            background-color: #ffe4e4;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .final-score {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .correct-background {
+            background-color: #d4edda;
+            /* Soft green background */
+        }
+
+        .incorrect-background {
+            background-color: #f8d7da;
+            /* Soft red background */
+        }
+
+        .correct-answer {
+            background-color: #f8d7da;
+            /* Soft red background */
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body id="body">
+    <div class="container">
+        <div class="header">Werkwoorden</div>
+        <div class="content" id="start-screen">
+            <h2>Kies de werkwoordstijd</h2>
+            <form id="verb-form">
+                <label class="option">
+                    <input type="checkbox" name="tense" value="present"> Tegenwoordige tijd - Nederlands Level 1
+                </label>
+                <label class="option">
+                    <input type="checkbox" name="tense" value="perfectum"> Perfectum - Nederlands Level 2
+                </label>
+                <label class="option">
+                    <input type="checkbox" name="tense" value="imperfectum"> Imperfectum - Nederlands Level 3
+                </label>
+                <button type="button" class="start-button">Start</button>
+            </form>
+        </div>
+        <div class="content hidden" id="practice-screen">
+            <div id="sentence-info">
+                <div class="infinitive-verb" id="infinitive-verb">zien</div>
+                <div class="verb-tense" id="verb-tense">perfectum</div>
+            </div>
+            <div class="sentence-display" id="sentence-display">We hebben die beroemde schilderijen in het museum ____.
+            </div>
+            <input type="text" id="user-input" placeholder="Type your answer here">
+            <div class="translation-info">
+                <span>🇬🇧</span> <span id="translation">We have seen those famous paintings in the museum.</span>
+            </div>
+            <div class="feedback" id="feedback"></div>
+            <div class="correct-answer hidden" id="correct-answer"></div>
+            <div class="hearts" id="lives">🧡🧡🧡</div>
+            <button type="button" class="check-button">Check</button>
+            <button type="button" class="question-mark-button" disabled>?</button>
+        </div>
+        <div class="content hidden" id="final-screen">
+            <div class="final-score" id="final-score"></div>
+            <ul class="mistake-list" id="mistake-list"></ul>
+            <button type="button" class="try-again-button">Try Again</button>
+        </div>
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <script>
+        const startButton = document.querySelector('.start-button');
+        const practiceScreen = document.getElementById('practice-screen');
+        const startScreen = document.getElementById('start-screen');
+        const finalScreen = document.getElementById('final-screen');
+        const checkButton = document.querySelector('.check-button');
+        const questionMarkButton = document.querySelector('.question-mark-button');
+        const tryAgainButton = document.querySelector('.try-again-button');
+        const userInput = document.getElementById('user-input');
+        const progressBar = document.getElementById('progress-bar');
+        const livesDisplay = document.getElementById('lives');
+        const infinitiveVerb = document.getElementById('infinitive-verb');
+        const verbTense = document.getElementById('verb-tense');
+        const translation = document.getElementById('translation');
+        const sentenceDisplay = document.getElementById('sentence-display');
+        const finalScore = document.getElementById('final-score');
+        const mistakeList = document.getElementById('mistake-list');
+        const feedback = document.getElementById('feedback');
+        const body = document.getElementById('body');
+        const correctAnswerDisplay = document.getElementById('correct-answer');
+
+        let lives = 3;
+        let currentSentenceIndex = 0;
+        let selectedTenses = [];
+        let practiceSentences = [];
+        let mistakes = [];
+        let hasUsedHint = false;
+
+        const sentences = [
+            { "infinitive": "werken", "translation": "He already works for 10 years at the government.", "tense": "present", "sentence": "Hij ... al 10 jaar bij de overheid.", "answer": "werkt" },
+            { "infinitive": "lezen", "translation": "She reads a book every evening.", "tense": "present", "sentence": "Zij ... elke avond een boek.", "answer": "leest" },
+            { "infinitive": "spelen", "translation": "The children play outside.", "tense": "present", "sentence": "De kinderen ... buiten.", "answer": "spelen" },
+            { "infinitive": "koken", "translation": "My mother cooks dinner every day.", "tense": "present", "sentence": "Mijn moeder ... elke dag het avondeten.", "answer": "kookt" },
+            { "infinitive": "fietsen", "translation": "I cycle to work every morning.", "tense": "present", "sentence": "Ik ... elke ochtend naar mijn werk.", "answer": "fiets" },
+            { "infinitive": "zwemmen", "translation": "He swims every weekend in the pool.", "tense": "present", "sentence": "Hij ... elk weekend in het zwembad.", "answer": "zwemt" },
+            { "infinitive": "lopen", "translation": "We walk to the park on Sundays.", "tense": "present", "sentence": "Wij ... op zondag naar het park.", "answer": "lopen" },
+            { "infinitive": "kopen", "translation": "She buys fresh vegetables at the market.", "tense": "present", "sentence": "Zij ... verse groenten op de markt.", "answer": "koopt" },
+            { "infinitive": "schrijven", "translation": "He writes letters to his friends.", "tense": "present", "sentence": "Hij ... brieven aan zijn vrienden.", "answer": "schrijft" },
+            { "infinitive": "drinken", "translation": "They drink coffee every morning.", "tense": "present", "sentence": "Zij ... elke ochtend koffie.", "answer": "drinken" },
+            { "infinitive": "studeren", "translation": "He studies law at the university.", "tense": "present", "sentence": "Hij ... rechten aan de universiteit.", "answer": "studeert" },
+            { "infinitive": "slapen", "translation": "The baby sleeps in the afternoon.", "tense": "present", "sentence": "De baby ... in de middag.", "answer": "slaapt" },
+            { "infinitive": "wonen", "translation": "They live in a big house.", "tense": "present", "sentence": "Zij ... in een groot huis.", "answer": "wonen" },
+            { "infinitive": "eten", "translation": "We eat dinner at 6 PM.", "tense": "present", "sentence": "Wij ... om 6 uur het avondeten.", "answer": "eten" },
+            { "infinitive": "leren", "translation": "The children learn to read and write.", "tense": "present", "sentence": "De kinderen ... lezen en schrijven.", "answer": "leren" },
+            { "infinitive": "zitten", "translation": "She sits in the garden.", "tense": "present", "sentence": "Zij ... in de tuin.", "answer": "zit" },
+            { "infinitive": "zingen", "translation": "He sings in a choir.", "tense": "present", "sentence": "Hij ... in een koor.", "answer": "zingt" },
+            { "infinitive": "bellen", "translation": "She calls her mother every day.", "tense": "present", "sentence": "Zij ... elke dag haar moeder.", "answer": "belt" },
+            { "infinitive": "helpen", "translation": "They help their neighbors.", "tense": "present", "sentence": "Zij ... hun buren.", "answer": "helpen" },
+            { "infinitive": "rijden", "translation": "He drives to work every day.", "tense": "present", "sentence": "Hij ... elke dag naar zijn werk.", "answer": "rijdt" },
+            { "infinitive": "zoeken", "translation": "They search for their keys.", "tense": "present", "sentence": "Zij ... naar hun sleutels.", "answer": "zoeken" },
+            { "infinitive": "komen", "translation": "She comes to the office every day.", "tense": "present", "sentence": "Zij ... elke dag naar kantoor.", "answer": "komt" },
+            { "infinitive": "vergeten", "translation": "He forgets his password often.", "tense": "present", "sentence": "Hij ... vaak zijn wachtwoord.", "answer": "vergeet" },
+            { "infinitive": "zien", "translation": "We see each other every weekend.", "tense": "present", "sentence": "Wij ... elkaar elk weekend.", "answer": "zien" },
+            { "infinitive": "werken", "translation": "She works in a hospital.", "tense": "present", "sentence": "Zij ... in een ziekenhuis.", "answer": "werkt" },
+            { "infinitive": "beginnen", "translation": "The show starts at 8 PM.", "tense": "present", "sentence": "De show ... om 8 uur.", "answer": "begint" },
+            { "infinitive": "dansen", "translation": "They dance at the party.", "tense": "present", "sentence": "Zij ... op het feest.", "answer": "dansen" },
+            { "infinitive": "betalen", "translation": "He pays the bills on time.", "tense": "present", "sentence": "Hij ... de rekeningen op tijd.", "answer": "betaalt" },
+            { "infinitive": "gebruiken", "translation": "She uses her phone for work.", "tense": "present", "sentence": "Zij ... haar telefoon voor werk.", "answer": "gebruikt" },
+            { "infinitive": "kijken", "translation": "We watch TV in the evening.", "tense": "present", "sentence": "Wij ... in de avond tv.", "answer": "kijken" },
+            { "infinitive": "brengen", "translation": "She brings her children to school.", "tense": "present", "sentence": "Zij ... haar kinderen naar school.", "answer": "brengt" },
+            { "infinitive": "vinden", "translation": "He finds the book interesting.", "tense": "present", "sentence": "Hij ... het boek interessant.", "answer": "vindt" },
+            { "infinitive": "gaan", "translation": "They go to the cinema.", "tense": "present", "sentence": "Zij ... naar de bioscoop.", "answer": "gaan" },
+            { "infinitive": "blijven", "translation": "She stays at home today.", "tense": "present", "sentence": "Zij ... vandaag thuis.", "answer": "blijft" },
+            { "infinitive": "kennen", "translation": "We know him very well.", "tense": "present", "sentence": "Wij ... hem heel goed.", "answer": "kennen" },
+            { "infinitive": "komen", "translation": "He comes home late.", "tense": "present", "sentence": "Hij ... laat thuis.", "answer": "komt" },
+            { "infinitive": "maken", "translation": "She makes beautiful paintings.", "tense": "present", "sentence": "Zij ... mooie schilderijen.", "answer": "maakt" },
+            { "infinitive": "nemen", "translation": "We take the bus to school.", "tense": "present", "sentence": "Wij ... de bus naar school.", "answer": "nemen" },
+            { "infinitive": "denken", "translation": "He thinks about his future.", "tense": "present", "sentence": "Hij ... aan zijn toekomst.", "answer": "denkt" },
+            { "infinitive": "kopen", "translation": "They buy a new house.", "tense": "present", "sentence": "Zij ... een nieuw huis.", "answer": "kopen" },
+            { "infinitive": "vinden", "translation": "She finds her job rewarding.", "tense": "present", "sentence": "Zij ... haar werk lonend.", "answer": "vindt" },
+            { "infinitive": "weten", "translation": "We know the answer.", "tense": "present", "sentence": "Wij ... het antwoord.", "answer": "weten" },
+            { "infinitive": "lezen", "translation": "He reads the newspaper every morning.", "tense": "present", "sentence": "Hij ... elke ochtend de krant.", "answer": "leest" },
+            { "infinitive": "verkopen", "translation": "She sells handmade jewelry.", "tense": "present", "sentence": "Zij ... handgemaakte sieraden.", "answer": "verkoopt" },
+            { "infinitive": "kijken", "translation": "They watch a movie together.", "tense": "present", "sentence": "Zij ... samen een film.", "answer": "kijken" },
+            { "infinitive": "rijden", "translation": "He drives a taxi in the city.", "tense": "present", "sentence": "Hij ... een taxi in de stad.", "answer": "rijdt" },
+            { "infinitive": "leren", "translation": "She learns Spanish online.", "tense": "present", "sentence": "Zij ... Spaans online.", "answer": "leert" },
+            { "infinitive": "schrijven", "translation": "He writes poems in his free time.", "tense": "present", "sentence": "Hij ... gedichten in zijn vrije tijd.", "answer": "schrijft" },
+            { "infinitive": "spelen", "translation": "They play chess every weekend.", "tense": "present", "sentence": "Zij ... elk weekend schaak.", "answer": "spelen" },
+            { "infinitive": "eten", "translation": "She eats breakfast at 7 AM.", "tense": "present", "sentence": "Zij ... om 7 uur ontbijt.", "answer": "eet" },
+            { "infinitive": "werken", "translation": "He has worked at the company for 10 years.", "tense": "perfectum", "sentence": "Hij heeft 10 jaar bij het bedrijf ...", "answer": "gewerkt" },
+            { "infinitive": "lezen", "translation": "She has read the book.", "tense": "perfectum", "sentence": "Zij heeft het boek ...", "answer": "gelezen" },
+            { "infinitive": "spelen", "translation": "The children have played outside.", "tense": "perfectum", "sentence": "De kinderen hebben buiten ...", "answer": "gespeeld" },
+            { "infinitive": "koken", "translation": "My mother has cooked dinner.", "tense": "perfectum", "sentence": "Mijn moeder heeft het avondeten ...", "answer": "gekookt" },
+            { "infinitive": "fietsen", "translation": "I have cycled to work.", "tense": "perfectum", "sentence": "Ik heb naar mijn werk ...", "answer": "gefietst" },
+            { "infinitive": "zwemmen", "translation": "He has swum in the pool.", "tense": "perfectum", "sentence": "Hij heeft in het zwembad ...", "answer": "gezwommen" },
+            { "infinitive": "lopen", "translation": "We have walked to the park.", "tense": "perfectum", "sentence": "Wij hebben naar het park ...", "answer": "gelopen" },
+            { "infinitive": "kopen", "translation": "She has bought fresh vegetables.", "tense": "perfectum", "sentence": "Zij heeft verse groenten ...", "answer": "gekocht" },
+            { "infinitive": "schrijven", "translation": "He has written letters.", "tense": "perfectum", "sentence": "Hij heeft brieven ...", "answer": "geschreven" },
+            { "infinitive": "drinken", "translation": "They have drunk coffee.", "tense": "perfectum", "sentence": "Zij hebben koffie ...", "answer": "gedronken" },
+            { "infinitive": "studeren", "translation": "He has studied law.", "tense": "perfectum", "sentence": "Hij heeft rechten ...", "answer": "gestudeerd" },
+            { "infinitive": "slapen", "translation": "The baby has slept in the afternoon.", "tense": "perfectum", "sentence": "De baby heeft in de middag ...", "answer": "geslapen" },
+            { "infinitive": "wonen", "translation": "They have lived in a big house.", "tense": "perfectum", "sentence": "Zij hebben in een groot huis ...", "answer": "gewoond" },
+            { "infinitive": "eten", "translation": "We have eaten dinner.", "tense": "perfectum", "sentence": "Wij hebben het avondeten ...", "answer": "gegeten" },
+            { "infinitive": "leren", "translation": "The children have learned to read and write.", "tense": "perfectum", "sentence": "De kinderen hebben lezen en schrijven ...", "answer": "geleerd" },
+            { "infinitive": "zitten", "translation": "She has sat in the garden.", "tense": "perfectum", "sentence": "Zij heeft in de tuin ...", "answer": "gezeten" },
+            { "infinitive": "zingen", "translation": "He has sung in a choir.", "tense": "perfectum", "sentence": "Hij heeft in een koor ...", "answer": "gezongen" },
+            { "infinitive": "bellen", "translation": "She has called her mother.", "tense": "perfectum", "sentence": "Zij heeft haar moeder ...", "answer": "gebeld" },
+            { "infinitive": "helpen", "translation": "They have helped their neighbors.", "tense": "perfectum", "sentence": "Zij hebben hun buren ...", "answer": "geholpen" },
+            { "infinitive": "rijden", "translation": "He has driven to work.", "tense": "perfectum", "sentence": "Hij heeft naar zijn werk ...", "answer": "gereden" },
+            { "infinitive": "zoeken", "translation": "They have searched for their keys.", "tense": "perfectum", "sentence": "Zij hebben naar hun sleutels ...", "answer": "gezocht" },
+            { "infinitive": "komen", "translation": "She has come to the office.", "tense": "perfectum", "sentence": "Zij is naar kantoor ...", "answer": "gekomen" },
+            { "infinitive": "vergeten", "translation": "He has forgotten his password.", "tense": "perfectum", "sentence": "Hij is zijn wachtwoord ...", "answer": "vergeten" },
+            { "infinitive": "zien", "translation": "We have seen each other.", "tense": "perfectum", "sentence": "Wij hebben elkaar ...", "answer": "gezien" },
+            { "infinitive": "werken", "translation": "She has worked in a hospital.", "tense": "perfectum", "sentence": "Zij heeft in een ziekenhuis ...", "answer": "gewerkt" },
+            { "infinitive": "beginnen", "translation": "The show has started.", "tense": "perfectum", "sentence": "De show is ...", "answer": "begonnen" },
+            { "infinitive": "dansen", "translation": "They have danced at the party.", "tense": "perfectum", "sentence": "Zij hebben op het feest ...", "answer": "gedanst" },
+            { "infinitive": "betalen", "translation": "He has paid the bills.", "tense": "perfectum", "sentence": "Hij heeft de rekeningen ...", "answer": "betaald" },
+            { "infinitive": "gebruiken", "translation": "She has used her phone.", "tense": "perfectum", "sentence": "Zij heeft haar telefoon ...", "answer": "gebruikt" },
+            { "infinitive": "kijken", "translation": "We have watched TV.", "tense": "perfectum", "sentence": "Wij hebben tv ...", "answer": "gekeken" },
+            { "infinitive": "brengen", "translation": "She has brought her children to school.", "tense": "perfectum", "sentence": "Zij heeft haar kinderen naar school ...", "answer": "gebracht" },
+            { "infinitive": "vinden", "translation": "He has found the book interesting.", "tense": "perfectum", "sentence": "Hij heeft het boek ...", "answer": "gevonden" },
+            { "infinitive": "gaan", "translation": "They have gone to the cinema.", "tense": "perfectum", "sentence": "Zij zijn naar de bioscoop ...", "answer": "gegaan" },
+            { "infinitive": "blijven", "translation": "She has stayed at home.", "tense": "perfectum", "sentence": "Zij is thuis ...", "answer": "gebleven" },
+            { "infinitive": "kennen", "translation": "We have known him.", "tense": "perfectum", "sentence": "Wij hebben hem ...", "answer": "gekend" },
+            { "infinitive": "komen", "translation": "He has come home.", "tense": "perfectum", "sentence": "Hij is thuis ...", "answer": "gekomen" },
+            { "infinitive": "maken", "translation": "She has made beautiful paintings.", "tense": "perfectum", "sentence": "Zij heeft mooie schilderijen ...", "answer": "gemaakt" },
+            { "infinitive": "nemen", "translation": "We have taken the bus.", "tense": "perfectum", "sentence": "Wij hebben de bus ...", "answer": "genomen" },
+            { "infinitive": "denken", "translation": "He has thought about his future.", "tense": "perfectum", "sentence": "Hij heeft aan zijn toekomst ...", "answer": "gedacht" },
+            { "infinitive": "kopen", "translation": "They have bought a new house.", "tense": "perfectum", "sentence": "Zij hebben een nieuw huis ...", "answer": "gekocht" },
+            { "infinitive": "vinden", "translation": "She has found her job rewarding.", "tense": "perfectum", "sentence": "Zij heeft haar werk ...", "answer": "gevonden" },
+            { "infinitive": "weten", "translation": "We have known the answer.", "tense": "perfectum", "sentence": "Wij hebben het antwoord ...", "answer": "geweten" },
+            { "infinitive": "lezen", "translation": "He has read the newspaper.", "tense": "perfectum", "sentence": "Hij heeft de krant ...", "answer": "gelezen" },
+            { "infinitive": "verkopen", "translation": "She has sold handmade jewelry.", "tense": "perfectum", "sentence": "Zij heeft handgemaakte sieraden ...", "answer": "verkocht" },
+            { "infinitive": "kijken", "translation": "They have watched a movie.", "tense": "perfectum", "sentence": "Zij hebben een film ...", "answer": "gekeken" },
+            { "infinitive": "rijden", "translation": "He has driven a taxi.", "tense": "perfectum", "sentence": "Hij heeft een taxi ...", "answer": "gereden" },
+            { "infinitive": "leren", "translation": "She has learned Spanish.", "tense": "perfectum", "sentence": "Zij heeft Spaans ...", "answer": "geleerd" },
+            { "infinitive": "schrijven", "translation": "He has written poems.", "tense": "perfectum", "sentence": "Hij heeft gedichten ...", "answer": "geschreven" },
+            { "infinitive": "spelen", "translation": "They have played chess.", "tense": "perfectum", "sentence": "Zij hebben schaak ...", "answer": "gespeeld" },
+            { "infinitive": "eten", "translation": "She has eaten breakfast.", "tense": "perfectum", "sentence": "Zij heeft ontbijt ...", "answer": "gegeten" },
+            { "infinitive": "werken", "translation": "He worked at the company for 10 years.", "tense": "imperfectum", "sentence": "Hij ... 10 jaar bij het bedrijf.", "answer": "werkte" },
+            { "infinitive": "lezen", "translation": "She read the book.", "tense": "imperfectum", "sentence": "Zij ... het boek.", "answer": "las" },
+            { "infinitive": "spelen", "translation": "The children played outside.", "tense": "imperfectum", "sentence": "De kinderen ... buiten.", "answer": "speelden" },
+            { "infinitive": "koken", "translation": "My mother cooked dinner.", "tense": "imperfectum", "sentence": "Mijn moeder ... het avondeten.", "answer": "kookte" },
+            { "infinitive": "fietsen", "translation": "I cycled to work.", "tense": "imperfectum", "sentence": "Ik ... naar mijn werk.", "answer": "fietste" },
+            { "infinitive": "zwemmen", "translation": "He swam in the pool.", "tense": "imperfectum", "sentence": "Hij ... in het zwembad.", "answer": "zwom" },
+            { "infinitive": "lopen", "translation": "We walked to the park.", "tense": "imperfectum", "sentence": "Wij ... naar het park.", "answer": "liepen" },
+            { "infinitive": "kopen", "translation": "She bought fresh vegetables.", "tense": "imperfectum", "sentence": "Zij ... verse groenten.", "answer": "kocht" },
+            { "infinitive": "schrijven", "translation": "He wrote letters.", "tense": "imperfectum", "sentence": "Hij ... brieven.", "answer": "schreef" },
+            { "infinitive": "drinken", "translation": "They drank coffee.", "tense": "imperfectum", "sentence": "Zij ... koffie.", "answer": "dronken" },
+            { "infinitive": "studeren", "translation": "He studied law.", "tense": "imperfectum", "sentence": "Hij ... rechten.", "answer": "studeerde" },
+            { "infinitive": "slapen", "translation": "The baby slept in the afternoon.", "tense": "imperfectum", "sentence": "De baby ... in de middag.", "answer": "sliep" },
+            { "infinitive": "wonen", "translation": "They lived in a big house.", "tense": "imperfectum", "sentence": "Zij ... in een groot huis.", "answer": "woonden" },
+            { "infinitive": "eten", "translation": "We ate dinner.", "tense": "imperfectum", "sentence": "Wij ... het avondeten.", "answer": "aten" },
+            { "infinitive": "leren", "translation": "The children learned to read and write.", "tense": "imperfectum", "sentence": "De kinderen ... lezen en schrijven.", "answer": "leerden" },
+            { "infinitive": "zitten", "translation": "She sat in the garden.", "tense": "imperfectum", "sentence": "Zij ... in de tuin.", "answer": "zat" },
+            { "infinitive": "zingen", "translation": "He sang in a choir.", "tense": "imperfectum", "sentence": "Hij ... in een koor.", "answer": "zong" },
+            { "infinitive": "bellen", "translation": "She called her mother.", "tense": "imperfectum", "sentence": "Zij ... haar moeder.", "answer": "belde" },
+            { "infinitive": "helpen", "translation": "They helped their neighbors.", "tense": "imperfectum", "sentence": "Zij ... hun buren.", "answer": "hielpen" },
+            { "infinitive": "rijden", "translation": "He drove to work.", "tense": "imperfectum", "sentence": "Hij ... naar zijn werk.", "answer": "reed" },
+            { "infinitive": "zoeken", "translation": "They searched for their keys.", "tense": "imperfectum", "sentence": "Zij ... naar hun sleutels.", "answer": "zochten" },
+            { "infinitive": "komen", "translation": "She came to the office.", "tense": "imperfectum", "sentence": "Zij ... naar kantoor.", "answer": "kwam" },
+            { "infinitive": "vergeten", "translation": "He forgot his password.", "tense": "imperfectum", "sentence": "Hij ... zijn wachtwoord.", "answer": "vergat" },
+            { "infinitive": "zien", "translation": "We saw each other.", "tense": "imperfectum", "sentence": "Wij ... elkaar.", "answer": "zagen" },
+            { "infinitive": "werken", "translation": "She worked in a hospital.", "tense": "imperfectum", "sentence": "Zij ... in een ziekenhuis.", "answer": "werkte" },
+            { "infinitive": "beginnen", "translation": "The show started.", "tense": "imperfectum", "sentence": "De show ...", "answer": "begon" },
+            { "infinitive": "dansen", "translation": "They danced at the party.", "tense": "imperfectum", "sentence": "Zij ... op het feest.", "answer": "dansten" },
+            { "infinitive": "betalen", "translation": "He paid the bills.", "tense": "imperfectum", "sentence": "Hij ... de rekeningen.", "answer": "betaalde" },
+            { "infinitive": "gebruiken", "translation": "She used her phone.", "tense": "imperfectum", "sentence": "Zij ... haar telefoon.", "answer": "gebruikte" },
+            { "infinitive": "kijken", "translation": "We watched TV.", "tense": "imperfectum", "sentence": "Wij ... tv.", "answer": "keken" },
+            { "infinitive": "brengen", "translation": "She brought her children to school.", "tense": "imperfectum", "sentence": "Zij ... haar kinderen naar school.", "answer": "bracht" },
+            { "infinitive": "vinden", "translation": "He found the book interesting.", "tense": "imperfectum", "sentence": "Hij ... het boek interessant.", "answer": "vond" },
+            { "infinitive": "gaan", "translation": "They went to the cinema.", "tense": "imperfectum", "sentence": "Zij ... naar de bioscoop.", "answer": "gingen" },
+            { "infinitive": "blijven", "translation": "She stayed at home.", "tense": "imperfectum", "sentence": "Zij ... thuis.", "answer": "bleef" },
+            { "infinitive": "kennen", "translation": "We knew him.", "tense": "imperfectum", "sentence": "Wij ... hem.", "answer": "kenden" },
+            { "infinitive": "komen", "translation": "He came home.", "tense": "imperfectum", "sentence": "Hij ... thuis.", "answer": "kwam" },
+            { "infinitive": "maken", "translation": "She made beautiful paintings.", "tense": "imperfectum", "sentence": "Zij ... mooie schilderijen.", "answer": "maakte" },
+            { "infinitive": "nemen", "translation": "We took the bus.", "tense": "imperfectum", "sentence": "Wij ... de bus.", "answer": "namen" },
+            { "infinitive": "denken", "translation": "He thought about his future.", "tense": "imperfectum", "sentence": "Hij ... aan zijn toekomst.", "answer": "dacht" },
+            { "infinitive": "kopen", "translation": "They bought a new house.", "tense": "imperfectum", "sentence": "Zij ... een nieuw huis.", "answer": "kochten" },
+            { "infinitive": "vinden", "translation": "She found her job rewarding.", "tense": "imperfectum", "sentence": "Zij ... haar werk lonend.", "answer": "vond" },
+            { "infinitive": "weten", "translation": "We knew the answer.", "tense": "imperfectum", "sentence": "Wij ... het antwoord.", "answer": "wisten" },
+            { "infinitive": "lezen", "translation": "He read the newspaper.", "tense": "imperfectum", "sentence": "Hij ... de krant.", "answer": "las" },
+            { "infinitive": "verkopen", "translation": "She sold handmade jewelry.", "tense": "imperfectum", "sentence": "Zij ... handgemaakte sieraden.", "answer": "verkocht" },
+            { "infinitive": "kijken", "translation": "They watched a movie.", "tense": "imperfectum", "sentence": "Zij ... een film.", "answer": "keken" },
+            { "infinitive": "rijden", "translation": "He drove a taxi.", "tense": "imperfectum", "sentence": "Hij ... een taxi.", "answer": "reed" },
+            { "infinitive": "leren", "translation": "She learned Spanish.", "tense": "imperfectum", "sentence": "Zij ... Spaans.", "answer": "leerde" },
+            { "infinitive": "schrijven", "translation": "He wrote poems.", "tense": "imperfectum", "sentence": "Hij ... gedichten.", "answer": "schreef" },
+            { "infinitive": "spelen", "translation": "They played chess.", "tense": "imperfectum", "sentence": "Zij ... schaak.", "answer": "speelden" },
+            { "infinitive": "eten", "translation": "She ate breakfast.", "tense": "imperfectum", "sentence": "Zij ... ontbijt.", "answer": "at" }
+            // Add more sentences here
+        ];
+
+        startButton.addEventListener('click', function () {
+            const checkboxes = document.querySelectorAll('input[name="tense"]:checked');
+            selectedTenses = Array.from(checkboxes).map(checkbox => checkbox.value);
+            if (selectedTenses.length > 0) {
+                startPractice();
+            } else {
+                alert('Please select at least one tense.');
+            }
+        });
+
+        function startPractice() {
+            startScreen.classList.add('hidden');
+            practiceScreen.classList.remove('hidden');
+            practiceSentences = sentences.filter(sentence => selectedTenses.includes(sentence.tense)).slice(0, 30);
+            lives = 3;
+            currentSentenceIndex = 0;
+            mistakes = [];
+            hasUsedHint = false;
+            updateLives();
+            updateSentence();
+        }
+
+        function updateSentence() {
+            if (currentSentenceIndex < practiceSentences.length) {
+                const currentSentence = practiceSentences[currentSentenceIndex];
+                infinitiveVerb.textContent = `${currentSentence.infinitive}`; // show only the verb
+                verbTense.textContent = currentSentence.tense;
+                sentenceDisplay.textContent = currentSentence.sentence;
+                translation.textContent = currentSentence.translation;
+                userInput.value = '';
+                feedback.style.display = 'none';
+                correctAnswerDisplay.classList.add('hidden');
+                body.classList.remove('correct-background', 'incorrect-background');
+                questionMarkButton.textContent = '?';
+                questionMarkButton.disabled = true;
+                questionMarkButton.classList.remove('enabled');
+                hasUsedHint = false;
+                updateProgressBar();
+            } else {
+                showFinalScreen();
+            }
+        }
+
+        function updateLives() {
+            livesDisplay.innerHTML = '🧡'.repeat(lives);
+        }
+
+        function checkAnswer() {
+            if (userInput.value.trim() !== '') {
+                const currentSentence = practiceSentences[currentSentenceIndex];
+                if (userInput.value.trim().toLowerCase() === currentSentence.answer.toLowerCase()) {
+                    feedback.textContent = 'Correct!';
+                    feedback.style.display = 'block';
+                    body.classList.add('correct-background');
+                    currentSentenceIndex++;
+                    setTimeout(updateSentence, 1000); // Wait for a moment before moving to the next sentence
+                } else {
+                    feedback.textContent = 'Incorrect. Try again.';
+                    feedback.style.display = 'block';
+                    body.classList.add('incorrect-background');
+                    if (!hasUsedHint) {
+                        mistakes.push({
+                            question: currentSentence.sentence,
+                            givenAnswer: userInput.value.trim(),
+                            correctAnswer: currentSentence.answer
+                        });
+                        lives--;
+                        updateLives();
+                        if (lives <= 0) {
+                            showFinalScreen();
+                        }
+                    }
+                    questionMarkButton.disabled = false;
+                    questionMarkButton.classList.add('enabled');
+                }
+            }
+        }
+
+        checkButton.addEventListener('click', checkAnswer);
+
+        userInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form submission
+                checkAnswer();
+            }
+        });
+
+        questionMarkButton.addEventListener('click', function () {
+            if (!questionMarkButton.disabled) {
+                const currentSentence = practiceSentences[currentSentenceIndex];
+                correctAnswerDisplay.textContent = `The correct answer is: ${currentSentence.answer}`;
+                correctAnswerDisplay.classList.remove('hidden');
+                body.classList.add('incorrect-background');
+                hasUsedHint = true;
+                questionMarkButton.textContent = 'Next';
+                questionMarkButton.addEventListener('click', nextQuestion);
+                questionMarkButton.classList.add('enabled');
+            }
+        });
+
+        function nextQuestion() {
+            questionMarkButton.removeEventListener('click', nextQuestion);
+            currentSentenceIndex++;
+            updateSentence();
+        }
+
+        tryAgainButton.addEventListener('click', function () {
+            finalScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+        });
+
+        function updateProgressBar() {
+            const progress = (currentSentenceIndex / practiceSentences.length) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        function showFinalScreen() {
+            practiceScreen.classList.add('hidden');
+            finalScreen.classList.remove('hidden');
+            finalScore.textContent = `Your final score is ${currentSentenceIndex} out of ${practiceSentences.length}`;
+            mistakeList.innerHTML = '';
+            mistakes.forEach(mistake => {
+                const li = document.createElement('li');
+                li.textContent = `Question: ${mistake.question}, Given Answer: ${mistake.givenAnswer}, Correct Answer: ${mistake.correctAnswer}`;
+                mistakeList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+
+</html>
